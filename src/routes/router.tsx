@@ -16,6 +16,7 @@ import { AdminWorkLogsPage } from "@/features/work-logs/components/AdminWorkLogs
 import { AdminTraineesPage } from "@/features/trainees/components/AdminTraineesPage";
 import { MastersPage } from "@/features/masters/components/MastersPage";
 import { MentorsPage } from "@/features/mentors/components/MentorsPage";
+import { ReportsPage } from "@/features/reports/components/ReportsPage";
 
 /** Routes "/" to the right home based on the signed-in user's role. */
 function RootRedirect() {
@@ -50,6 +51,7 @@ export const router = createBrowserRouter([
           { index: true, element: <AdminDashboard /> },
           { path: "trainees", element: <AdminTraineesPage /> },
           { path: "work-logs", element: <AdminWorkLogsPage /> },
+          { path: "reports", element: <ReportsPage /> },
           { path: "masters", element: <MastersPage /> },
           { path: "mentors", element: <MentorsPage /> },
         ],

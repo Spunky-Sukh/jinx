@@ -1,13 +1,23 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as api from "../api/trainees.api";
 
 export const traineeKeys = {
   all: ["trainees"] as const,
   me: ["trainees", "me"] as const,
+  page: (f: api.TraineeQuery) => ["trainees", "page", f] as const,
 };
 
 export function useTrainees() {
   return useQuery({ queryKey: traineeKeys.all, queryFn: api.listTrainees });
+}
+
+/** Paginated list; keeps the previous page visible while the next one loads. */
+export function useTraineesPage(query: api.TraineeQuery = {}) {
+  return useQuery({
+    queryKey: traineeKeys.page(query),
+    queryFn: () => api.listTraineesPage(query),
+    placeholderData: keepPreviousData,
+  });
 }
 
 export function useMyTrainee() {
@@ -19,6 +29,10 @@ export function useTraineeMutations() {
   const invalidate = () => qc.invalidateQueries({ queryKey: traineeKeys.all });
   return {
     register: useMutation({ mutationFn: api.registerTrainee, onSuccess: invalidate }),
+    update: useMutation({
+      mutationFn: (v: { id: string; patch: api.TraineePatch }) => api.updateTrainee(v.id, v.patch),
+      onSuccess: invalidate,
+    }),
     setActive: useMutation({
       mutationFn: (v: { id: string; is_active: boolean }) => api.setTraineeActive(v.id, v.is_active),
       onSuccess: invalidate,

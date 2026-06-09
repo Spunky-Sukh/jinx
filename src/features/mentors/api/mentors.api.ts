@@ -64,6 +64,25 @@ export async function registerMentor(input: NewMentor): Promise<Mentor> {
   return data as Mentor;
 }
 
+/** Fields an admin may edit after a mentor is created. Email is omitted — it is
+ *  the login identity and is owned by Supabase Auth. */
+export interface MentorPatch {
+  full_name?: string;
+  phone?: string | null;
+  team_id?: string;
+}
+
+export async function updateMentor(id: string, patch: MentorPatch): Promise<Mentor> {
+  const { data, error } = await supabase
+    .from("mentors")
+    .update(patch)
+    .eq("id", id)
+    .select(SELECT)
+    .single();
+  if (error) throw error;
+  return data as Mentor;
+}
+
 export async function setMentorActive(id: string, is_active: boolean) {
   const { error } = await supabase.from("mentors").update({ is_active }).eq("id", id);
   if (error) throw error;

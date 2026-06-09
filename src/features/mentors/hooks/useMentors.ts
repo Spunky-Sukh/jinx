@@ -23,6 +23,10 @@ export function useMentorMutations() {
   const invalidate = () => qc.invalidateQueries({ queryKey: mentorKeys.all });
   return {
     register: useMutation({ mutationFn: api.registerMentor, onSuccess: invalidate }),
+    update: useMutation({
+      mutationFn: (v: { id: string; patch: api.MentorPatch }) => api.updateMentor(v.id, v.patch),
+      onSuccess: invalidate,
+    }),
     setActive: useMutation({
       mutationFn: (v: { id: string; is_active: boolean }) => api.setMentorActive(v.id, v.is_active),
       onSuccess: invalidate,

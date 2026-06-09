@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase";
+import type { Paged } from "@/lib/pagination";
 import type { Trainee } from "@/types/db";
 
 const SELECT = `
@@ -12,6 +13,7 @@ const SELECT = `
   training_period:training_periods(*)
 `;
 
+/** Unpaginated list — used for dropdowns and dashboard counts. */
 export async function listTrainees(): Promise<Trainee[]> {
   const { data, error } = await supabase
     .from("trainees")
@@ -19,6 +21,50 @@ export async function listTrainees(): Promise<Trainee[]> {
     .order("created_at", { ascending: false });
   if (error) throw error;
   return data as Trainee[];
+}
+
+export type TraineeSortBy = "full_name" | "created_at" | "start_date" | "end_date";
+
+export interface TraineeQuery {
+  /** Free-text over name / email / city. */
+  search?: string;
+  status?: "all" | "active" | "inactive";
+  teamId?: string;
+  mentorId?: string;
+  sortBy?: TraineeSortBy;
+  sortDir?: "asc" | "desc";
+  page?: number;
+  pageSize?: number;
+}
+
+function safeSearch(s: string): string {
+  return s.replace(/[,()%*]/g, " ").trim();
+}
+
+/** Paginated + sorted + filtered list for the admin trainees page. */
+export async function listTraineesPage(f: TraineeQuery = {}): Promise<Paged<Trainee>> {
+  const page = f.page ?? 0;
+  const pageSize = f.pageSize ?? 12;
+  const from = page * pageSize;
+  const to = from + pageSize - 1;
+
+  let q = supabase
+    .from("trainees")
+    .select(SELECT, { count: "exact" })
+    .order(f.sortBy ?? "created_at", { ascending: f.sortDir === "asc" })
+    .range(from, to);
+
+  if (f.status && f.status !== "all") q = q.eq("is_active", f.status === "active");
+  if (f.teamId) q = q.eq("team_id", f.teamId);
+  if (f.mentorId) q = q.eq("mentor_id", f.mentorId);
+  if (f.search) {
+    const s = safeSearch(f.search);
+    if (s) q = q.or(`full_name.ilike.%${s}%,email.ilike.%${s}%,city.ilike.%${s}%`);
+  }
+
+  const { data, error, count } = await q;
+  if (error) throw error;
+  return { rows: data as Trainee[], count: count ?? 0 };
 }
 
 /** Trainee record for the currently logged-in trainee. */
@@ -89,6 +135,36 @@ export async function registerTrainee(input: NewTrainee): Promise<Trainee> {
       start_date: input.start_date,
       end_date: input.end_date,
     })
+    .select(SELECT)
+    .single();
+  if (error) throw error;
+  return data as Trainee;
+}
+
+/** Fields an admin may edit after a trainee is created. Email is omitted on
+ *  purpose — it is the login identity and is owned by Supabase Auth. */
+export interface TraineePatch {
+  full_name?: string;
+  phone?: string;
+  alt_phone?: string | null;
+  gender?: "male" | "female";
+  city?: string;
+  college_id?: string | null;
+  course_id?: string | null;
+  company_id?: string | null;
+  system_id?: string | null;
+  team_id?: string;
+  mentor_id?: string;
+  training_period_id?: string;
+  start_date?: string;
+  end_date?: string;
+}
+
+export async function updateTrainee(id: string, patch: TraineePatch): Promise<Trainee> {
+  const { data, error } = await supabase
+    .from("trainees")
+    .update(patch)
+    .eq("id", id)
     .select(SELECT)
     .single();
   if (error) throw error;

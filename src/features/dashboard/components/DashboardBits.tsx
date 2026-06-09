@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui";
-import { Select, ChipGroup } from "@/components/ui";
+import { Select, ChipGroup, Input } from "@/components/ui";
 import { STATUS_OPTIONS, LOCATION_OPTIONS } from "@/features/work-logs/constants";
 import type { WorkLocation, WorkStatus } from "@/types/db";
 
@@ -46,12 +46,34 @@ export interface FiltersValue {
 export function FilterBar({
   value,
   onChange,
+  search,
+  onSearch,
+  sort,
+  onSort,
+  sortOptions,
 }: {
   value: FiltersValue;
   onChange: (v: FiltersValue) => void;
+  /** Optional debounced search box (controlled by the parent). */
+  search?: string;
+  onSearch?: (v: string) => void;
+  /** Optional sort dropdown. */
+  sort?: string;
+  onSort?: (v: string) => void;
+  sortOptions?: { value: string; label: string }[];
 }) {
   return (
     <div className="flex flex-wrap items-end gap-3">
+      {onSearch && (
+        <div className="min-w-[200px] flex-1">
+          <span className="mb-1 block text-xs font-medium text-muted">Search</span>
+          <Input
+            value={search ?? ""}
+            onChange={(e) => onSearch(e.target.value)}
+            placeholder="Search task or description…"
+          />
+        </div>
+      )}
       <div className="min-w-[160px]">
         <span className="mb-1 block text-xs font-medium text-muted">Status</span>
         <Select
@@ -86,6 +108,12 @@ export function FilterBar({
           className="h-10 rounded-xl border border-border bg-surface px-3 text-sm"
         />
       </label>
+      {onSort && sortOptions && (
+        <div className="min-w-[150px]">
+          <span className="mb-1 block text-xs font-medium text-muted">Sort</span>
+          <Select options={sortOptions} value={sort ?? sortOptions[0]?.value ?? ""} onChange={onSort} />
+        </div>
+      )}
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { StatTile } from "./DashboardBits";
 import { StatusChart } from "./StatusChart";
 import { useMyTrainee } from "@/features/trainees/hooks/useTrainees";
 import { useWorkLogs } from "@/features/work-logs/hooks/useWorkLogs";
-import { formatDate } from "@/lib/date";
+import { TrainingProgress } from "@/features/trainees/components/TrainingProgress";
 
 export function TraineeDashboard() {
   const { data: trainee, isLoading: lt } = useMyTrainee();
@@ -36,12 +36,11 @@ export function TraineeDashboard() {
         <Card>
           <CardBody className="flex flex-col gap-3 text-sm">
             <h3 className="font-display text-lg">Training details</h3>
+            <TrainingProgress start={trainee.start_date} end={trainee.end_date} />
             <Row label="Team" value={trainee.team?.name} />
             <Row label="Mentor" value={trainee.mentor?.full_name} />
             <Row label="Course" value={trainee.course?.name} />
             <Row label="Period" value={trainee.training_period?.label} />
-            <Row label="Start" value={formatDate(trainee.start_date)} />
-            <Row label="End" value={formatDate(trainee.end_date)} />
           </CardBody>
         </Card>
       </div>

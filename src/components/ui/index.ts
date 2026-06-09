@@ -6,5 +6,6 @@ export * from "./Card";
 export * from "./Badge";
 export * from "./ChipGroup";
 export * from "./Modal";
+export * from "./Pagination";
 export * from "./Spinner";
 export * from "./Toast";

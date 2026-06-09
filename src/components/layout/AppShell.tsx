@@ -5,6 +5,7 @@ import {
   Users,
   Database,
   GraduationCap,
+  FileBarChart,
   LogOut,
   Moon,
   Sun,
@@ -28,6 +29,7 @@ const NAV: Record<AppRole, NavItem[]> = {
     { to: "/admin", label: "Dashboard", icon: <LayoutDashboard className="h-4 w-4" /> },
     { to: "/admin/trainees", label: "Trainees", icon: <GraduationCap className="h-4 w-4" /> },
     { to: "/admin/work-logs", label: "Work Logs", icon: <ListChecks className="h-4 w-4" /> },
+    { to: "/admin/reports", label: "Reports", icon: <FileBarChart className="h-4 w-4" /> },
     { to: "/admin/masters", label: "Masters", icon: <Database className="h-4 w-4" /> },
     { to: "/admin/mentors", label: "Mentors", icon: <Users className="h-4 w-4" /> },
   ],
@@ -58,7 +60,7 @@ export function AppShell() {
   return (
     <div className="flex min-h-screen">
       {/* Sidebar (desktop) */}
-      <aside className="hidden w-64 shrink-0 flex-col border-r border-border bg-surface p-4 lg:flex">
+      <aside className="hidden w-64 shrink-0 flex-col border-r border-border bg-surface p-4 lg:flex print:hidden">
         <div className="mb-8 flex items-center gap-2 px-2 font-display text-xl">
           <Zap className="h-6 w-6 text-primary" /> Jinx
         </div>
@@ -88,7 +90,7 @@ export function AppShell() {
 
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Topbar */}
-        <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-bg/80 px-4 py-3 backdrop-blur lg:px-8">
+        <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-bg/80 px-4 py-3 backdrop-blur lg:px-8 print:hidden">
           <div className="flex items-center gap-2 font-display text-lg lg:hidden">
             <Zap className="h-5 w-5 text-primary" /> Jinx
           </div>
@@ -110,7 +112,7 @@ export function AppShell() {
         </header>
 
         {/* Mobile nav */}
-        <nav className="flex gap-1 overflow-x-auto border-b border-border bg-surface px-3 py-2 lg:hidden">
+        <nav className="flex gap-1 overflow-x-auto border-b border-border bg-surface px-3 py-2 lg:hidden print:hidden">
           {items.map((item) => (
             <NavLink
               key={item.to}

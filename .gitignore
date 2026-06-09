@@ -26,3 +26,5 @@ dist-ssr
 
 .env
 package-lock.json
+CLAUDE.md
+Phase 2.md
