@@ -1,0 +1,36 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Midnight indigo tile, lifting toward the indigo accent in one corner -->
+    <linearGradient id="tile" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#161A2E"/>
+      <stop offset="0.55" stop-color="#0D101B"/>
+      <stop offset="1" stop-color="#1B1E3A"/>
+    </linearGradient>
+    <!-- Signal lime, with a brighter top edge for a little dimension -->
+    <linearGradient id="bolt" x1="32" y1="6" x2="32" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#B6F23C"/>
+      <stop offset="1" stop-color="#74B80E"/>
+    </linearGradient>
+    <!-- Soft lime glow behind the mark -->
+    <radialGradient id="glow" cx="0.5" cy="0.46" r="0.55">
+      <stop offset="0" stop-color="#84CC16" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#84CC16" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Tile -->
+  <rect x="1" y="1" width="62" height="62" rx="15" fill="url(#tile)"/>
+  <rect x="1.5" y="1.5" width="61" height="61" rx="14.5" fill="none" stroke="#2A3046" stroke-width="1"/>
+
+  <!-- Glow -->
+  <circle cx="32" cy="30" r="26" fill="url(#glow)"/>
+
+  <!-- Custom lightning bolt -->
+  <path d="M37 6 L17 34 L29 34 L25 58 L47 28 L34 28 Z"
+        fill="url(#bolt)"
+        stroke="#0C1206" stroke-width="1.25" stroke-linejoin="round"/>
+  <!-- Edge highlight -->
+  <path d="M37 6 L17 34 L29 34"
+        fill="none" stroke="#D6FF7A" stroke-width="1.25"
+        stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+</svg>

@@ -1,0 +1,47 @@
+/*
+  THEME TOKENS — edit this file to re-skin the entire app.
+  Colors are space-separated RGB channels so Tailwind's <alpha-value> works.
+  A "midnight indigo + signal lime" identity: a focused work-tracking tool,
+  not another generic SaaS blue. Swap [data-theme="light"] block to retheme.
+*/
+
+:root,
+[data-theme="dark"] {
+  --c-bg: 13 16 27; /* deep indigo-black */
+  --c-surface: 20 24 38;
+  --c-surface-2: 28 33 51;
+  --c-border: 42 48 70;
+  --c-muted: 138 146 172;
+  --c-fg: 232 235 244;
+
+  --c-primary: 132 204 22; /* signal lime */
+  --c-primary-fg: 12 18 6;
+  --c-accent: 99 102 241; /* indigo accent */
+
+  --c-success: 52 211 153;
+  --c-warning: 251 191 36;
+  --c-danger: 248 113 113;
+  --c-info: 96 165 250;
+
+  --radius: 14px;
+}
+
+[data-theme="light"] {
+  --c-bg: 247 248 250;
+  --c-surface: 255 255 255;
+  --c-surface-2: 241 243 247;
+  --c-border: 224 228 236;
+  --c-muted: 100 108 130;
+  --c-fg: 24 28 40;
+
+  --c-primary: 77 124 15;
+  --c-primary-fg: 255 255 255;
+  --c-accent: 79 70 229;
+
+  --c-success: 16 185 129;
+  --c-warning: 217 119 6;
+  --c-danger: 220 38 38;
+  --c-info: 37 99 235;
+
+  --radius: 14px;
+}
