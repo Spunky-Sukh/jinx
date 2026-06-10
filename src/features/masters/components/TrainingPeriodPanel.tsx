@@ -16,6 +16,8 @@ import {
 import { useTrainingPeriods, useTrainingPeriodMutations } from "../hooks/useMasters";
 
 export function TrainingPeriodPanel() {
+  // Opt out of the React Compiler so AnimatePresence list-exit animations clean up.
+  "use no memo";
   const { notify } = useToast();
   const { data, isLoading } = useTrainingPeriods();
   const m = useTrainingPeriodMutations();

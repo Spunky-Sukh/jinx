@@ -12,8 +12,11 @@ import { TraineeDashboard } from "@/features/dashboard/components/TraineeDashboa
 import { MentorDashboard, AdminDashboard } from "@/features/dashboard/components/RoleDashboards";
 import { TraineeWorkLogsPage } from "@/features/work-logs/components/TraineeWorkLogsPage";
 import { MentorWorkLogsPage } from "@/features/work-logs/components/MentorWorkLogsPage";
+import { MentorTraineesPage } from "@/features/trainees/components/MentorTraineesPage";
+import { MentorTraineeDetailPage } from "@/features/trainees/components/MentorTraineeDetailPage";
 import { AdminWorkLogsPage } from "@/features/work-logs/components/AdminWorkLogsPage";
 import { AdminTraineesPage } from "@/features/trainees/components/AdminTraineesPage";
+import { TraineeProfilePage } from "@/features/trainees/components/TraineeProfilePage";
 import { MastersPage } from "@/features/masters/components/MastersPage";
 import { MentorsPage } from "@/features/mentors/components/MentorsPage";
 import { ReportsPage } from "@/features/reports/components/ReportsPage";
@@ -68,6 +71,8 @@ export const router = createBrowserRouter([
         element: <AppShell />,
         children: [
           { index: true, element: <MentorDashboard /> },
+          { path: "trainees", element: <MentorTraineesPage /> },
+          { path: "trainees/:id", element: <MentorTraineeDetailPage /> },
           { path: "work-logs", element: <MentorWorkLogsPage /> },
         ],
       },
@@ -84,6 +89,7 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <TraineeDashboard /> },
           { path: "work-logs", element: <TraineeWorkLogsPage /> },
+          { path: "profile", element: <TraineeProfilePage /> },
         ],
       },
     ],

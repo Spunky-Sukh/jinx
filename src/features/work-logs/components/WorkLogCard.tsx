@@ -57,7 +57,7 @@ export function WorkLogCard({ log, onEdit, onDelete, onReview, showTrainee }: Pr
           )}
 
           <div className="flex justify-end gap-2">
-            {onReview && (
+            {onReview && !locked && (
               <button
                 onClick={() => onReview(log)}
                 className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-sm text-primary hover:bg-surface-2"
@@ -81,7 +81,7 @@ export function WorkLogCard({ log, onEdit, onDelete, onReview, showTrainee }: Pr
                 <Trash2 className="h-4 w-4" /> Delete
               </button>
             )}
-            {locked && (onEdit || onDelete) && (
+            {locked && (onEdit || onDelete || onReview) && (
               <span className="text-xs text-muted">Completed — locked</span>
             )}
           </div>

@@ -24,6 +24,24 @@ export async function updatePassword(newPassword: string) {
   if (error) throw error;
 }
 
+/**
+ * In-app password change. Supabase has no "verify current password" call, so we
+ * re-authenticate with the current password first (which also refreshes the
+ * session) and only then set the new one. Throws if the current password is wrong.
+ */
+export async function changePassword(
+  email: string,
+  currentPassword: string,
+  newPassword: string
+) {
+  const { error: verifyErr } = await supabase.auth.signInWithPassword({
+    email,
+    password: currentPassword,
+  });
+  if (verifyErr) throw new Error("Current password is incorrect");
+  await updatePassword(newPassword);
+}
+
 export async function fetchProfile(userId: string): Promise<Profile | null> {
   const { data, error } = await supabase
     .from("profiles")

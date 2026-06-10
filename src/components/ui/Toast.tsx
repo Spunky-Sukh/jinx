@@ -6,6 +6,9 @@ type Toast = { id: number; message: string; kind: "success" | "error" };
 const Ctx = createContext<{ notify: (m: string, k?: Toast["kind"]) => void } | null>(null);
 
 export function ToastProvider({ children }: { children: ReactNode }) {
+  // See Modal.tsx: opt out of the React Compiler so AnimatePresence can remove
+  // exited toasts instead of leaving them mounted (and click-blocking).
+  "use no memo";
   const [toasts, setToasts] = useState<Toast[]>([]);
   const notify = useCallback((message: string, kind: Toast["kind"] = "success") => {
     const id = Date.now() + Math.random();

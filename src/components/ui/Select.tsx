@@ -31,6 +31,9 @@ export function Select({
   className,
   emptyText = "No options",
 }: Props) {
+  // Opt out of the React Compiler: it memoizes AnimatePresence children so Framer
+  // Motion can't clean up the exiting dropdown, leaving a click-blocking overlay.
+  "use no memo";
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);

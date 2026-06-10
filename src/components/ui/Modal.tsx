@@ -12,10 +12,15 @@ interface Props {
 }
 
 export function Modal({ open, onClose, title, children, className }: Props) {
+  // The React Compiler (enabled globally) memoizes AnimatePresence's children in
+  // a way that stops Framer Motion from detecting the exiting node — leaving an
+  // invisible, click-blocking overlay mounted after close. Opt this component out.
+  "use no memo";
   return (
     <AnimatePresence>
       {open && (
         <motion.div
+          key="modal"
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

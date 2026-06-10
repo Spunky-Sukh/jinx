@@ -6,6 +6,7 @@ import {
   Database,
   GraduationCap,
   FileBarChart,
+  UserCircle,
   LogOut,
   Moon,
   Sun,
@@ -35,11 +36,13 @@ const NAV: Record<AppRole, NavItem[]> = {
   ],
   mentor: [
     { to: "/mentor", label: "Dashboard", icon: <LayoutDashboard className="h-4 w-4" /> },
+    { to: "/mentor/trainees", label: "My Trainees", icon: <GraduationCap className="h-4 w-4" /> },
     { to: "/mentor/work-logs", label: "Trainee Work", icon: <ListChecks className="h-4 w-4" /> },
   ],
   trainee: [
     { to: "/app", label: "Dashboard", icon: <LayoutDashboard className="h-4 w-4" /> },
     { to: "/app/work-logs", label: "My Work", icon: <ListChecks className="h-4 w-4" /> },
+    { to: "/app/profile", label: "My Profile", icon: <UserCircle className="h-4 w-4" /> },
   ],
 };
 

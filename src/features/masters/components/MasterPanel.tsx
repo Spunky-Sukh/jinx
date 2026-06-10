@@ -17,6 +17,8 @@ import { useMaster, useMasterMutations } from "../hooks/useMasters";
 
 /** Reusable list+create+edit panel for any name-based master. */
 export function MasterPanel({ table, title }: { table: MasterTable; title: string }) {
+  // Opt out of the React Compiler so AnimatePresence list-exit animations clean up.
+  "use no memo";
   const { notify } = useToast();
   const { data, isLoading } = useMaster(table);
   const m = useMasterMutations(table);

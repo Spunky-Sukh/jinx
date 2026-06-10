@@ -4,11 +4,27 @@ import * as api from "../api/trainees.api";
 export const traineeKeys = {
   all: ["trainees"] as const,
   me: ["trainees", "me"] as const,
+  mine: ["trainees", "mine"] as const,
+  detail: (id: string) => ["trainees", "detail", id] as const,
   page: (f: api.TraineeQuery) => ["trainees", "page", f] as const,
 };
 
 export function useTrainees() {
   return useQuery({ queryKey: traineeKeys.all, queryFn: api.listTrainees });
+}
+
+/** Trainees assigned to the signed-in mentor (RLS-scoped). */
+export function useMyTrainees() {
+  return useQuery({ queryKey: traineeKeys.mine, queryFn: api.listMyTrainees });
+}
+
+/** A single trainee by id (RLS-scoped to the caller). */
+export function useTrainee(id: string | undefined) {
+  return useQuery({
+    queryKey: traineeKeys.detail(id ?? "none"),
+    queryFn: () => api.getTrainee(id as string),
+    enabled: !!id,
+  });
 }
 
 /** Paginated list; keeps the previous page visible while the next one loads. */

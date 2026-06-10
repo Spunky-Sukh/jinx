@@ -21,7 +21,12 @@ export function LoginPage() {
       // Guards will route to the role home once the session resolves.
       nav("/", { replace: true });
     } catch (err) {
-      notify(err instanceof Error ? err.message : "Sign in failed", "error");
+      const msg = err instanceof Error ? err.message : "Sign in failed";
+      // Deactivated accounts are banned in Auth (see schema-phase2.sql).
+      const friendly = /banned|blocked/i.test(msg)
+        ? "Your account has been deactivated. Please contact your administrator."
+        : msg;
+      notify(friendly, "error");
     } finally {
       setLoading(false);
     }

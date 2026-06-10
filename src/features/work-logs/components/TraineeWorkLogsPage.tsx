@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
-import { Plus } from "lucide-react";
+import { Lock, Plus } from "lucide-react";
 import { Button, EmptyState, Pagination, Spinner, useToast } from "@/components/ui";
 import { PageHeader } from "@/components/layout/PageHeader";
+import { formatDate, today } from "@/lib/date";
 import { FilterBar, type FiltersValue } from "@/features/dashboard/components/DashboardBits";
 import { useMyTrainee } from "@/features/trainees/hooks/useTrainees";
 import { useWorkLogsPage, useWorkLogMutations } from "@/features/work-logs/hooks/useWorkLogs";
@@ -54,22 +55,37 @@ export function TraineeWorkLogsPage() {
   if (!trainee)
     return <EmptyState title="No trainee profile found" hint="Contact your administrator." />;
 
+  // Training period over -> read-only (enforced server-side by RLS; mirrored here).
+  const finished = today() > trainee.end_date;
+
   return (
     <>
       <PageHeader
         title="My Work"
         subtitle="Log your daily tasks. Completed entries are locked."
         action={
-          <Button
-            onClick={() => {
-              setEditing(null);
-              setOpen(true);
-            }}
-          >
-            <Plus className="h-4 w-4" /> Add work log
-          </Button>
+          finished ? undefined : (
+            <Button
+              onClick={() => {
+                setEditing(null);
+                setOpen(true);
+              }}
+            >
+              <Plus className="h-4 w-4" /> Add work log
+            </Button>
+          )
         }
       />
+
+      {finished && (
+        <div className="mb-6 flex items-start gap-3 rounded-2xl border border-border bg-surface-2 px-4 py-3 text-sm">
+          <Lock className="mt-0.5 h-4 w-4 shrink-0 text-muted" />
+          <p>
+            Your training period ended on <span className="font-medium">{formatDate(trainee.end_date)}</span>.
+            Your work log is now read-only — you can view your entries but can no longer add, edit or delete them.
+          </p>
+        </div>
+      )}
 
       <div className="mb-6">
         <FilterBar
@@ -94,18 +110,26 @@ export function TraineeWorkLogsPage() {
               <WorkLogCard
                 key={log.id}
                 log={log}
-                onEdit={(l) => {
-                  setEditing(l);
-                  setOpen(true);
-                }}
-                onDelete={async (l) => {
-                  try {
-                    await remove.mutateAsync(l.id);
-                    notify("Deleted");
-                  } catch (e) {
-                    notify(e instanceof Error ? e.message : "Failed", "error");
-                  }
-                }}
+                onEdit={
+                  finished
+                    ? undefined
+                    : (l) => {
+                        setEditing(l);
+                        setOpen(true);
+                      }
+                }
+                onDelete={
+                  finished
+                    ? undefined
+                    : async (l) => {
+                        try {
+                          await remove.mutateAsync(l.id);
+                          notify("Deleted");
+                        } catch (e) {
+                          notify(e instanceof Error ? e.message : "Failed", "error");
+                        }
+                      }
+                }
               />
             ))}
           </div>

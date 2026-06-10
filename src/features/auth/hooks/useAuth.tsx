@@ -33,6 +33,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
       try {
         const p = await fetchProfile(s.user.id);
+        // Defense in depth: if an account is deactivated mid-session, end it.
+        // (Login is already blocked at the Auth layer via banned_until.)
+        if (p && p.is_active === false) {
+          await supabase.auth.signOut();
+          if (mounted) {
+            setProfile(null);
+            setSession(null);
+          }
+          return;
+        }
         if (mounted) setProfile(p);
       } catch {
         if (mounted) setProfile(null);

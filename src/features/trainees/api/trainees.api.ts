@@ -67,6 +67,32 @@ export async function listTraineesPage(f: TraineeQuery = {}): Promise<Paged<Trai
   return { rows: data as Trainee[], count: count ?? 0 };
 }
 
+/**
+ * Trainees assigned to the currently logged-in mentor. RLS (`trainees_mentor_read`)
+ * already scopes the result to `mentor_id = my_mentor_id()`, so no explicit filter
+ * is needed — a plain select returns only this mentor's trainees.
+ */
+export async function listMyTrainees(): Promise<Trainee[]> {
+  const { data, error } = await supabase
+    .from("trainees")
+    .select(SELECT)
+    .order("full_name");
+  if (error) throw error;
+  return data as Trainee[];
+}
+
+/** A single trainee by id. RLS limits this to the caller's own scope
+ *  (admin: any; mentor: own trainees; trainee: self). */
+export async function getTrainee(id: string): Promise<Trainee | null> {
+  const { data, error } = await supabase
+    .from("trainees")
+    .select(SELECT)
+    .eq("id", id)
+    .maybeSingle();
+  if (error) throw error;
+  return data as Trainee | null;
+}
+
 /** Trainee record for the currently logged-in trainee. */
 export async function getMyTrainee(): Promise<Trainee | null> {
   const { data: userRes } = await supabase.auth.getUser();
